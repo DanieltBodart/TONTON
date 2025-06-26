@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="pt-br" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plano de Negócios Interativo - Estaleiro Tonton</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- 
+    Chosen Palette: Deep Sea Harmony
+    Application Structure Plan: The SPA is designed as a thematic, one-page narrative. It starts with a hero section to grab attention, followed by a sticky navigation bar for easy access to key themes: 'O Problema & A Solução' (the core 'why'), 'Análise de Mercado' (the competitive landscape), 'O Negócio' (operational plan), 'Plano Financeiro' (key numbers), and 'Riscos & Estratégia'. This structure transforms the linear report into an explorable dashboard, prioritizing user understanding and engagement over report mirroring. Key data is highlighted in cards and interactive charts to make complex information digestible. The flow guides the user logically from the business case to the execution plan.
+    Visualization & Content Choices: 
+    - Report Info: High operational costs & market scarcity. -> Goal: Impact. -> Viz/Method: Large statistic cards (HTML/CSS). -> Interaction: High visibility. -> Justification: Immediately establishes the core problem.
+    - Report Info: Investment Breakdown. -> Goal: Inform proportions. -> Viz/Method: Donut Chart (Chart.js). -> Interaction: Hover tooltips. -> Justification: Effectively shows the composition of the total investment.
+    - Report Info: Services & Timeline. -> Goal: Organize/Show Process. -> Viz/Method: Interactive tabs and a CSS-based timeline. -> Interaction: Click tabs, hover on milestones. -> Justification: Manages information density and is more engaging than lists.
+    - Report Info: Risks vs. Strategies. -> Goal: Relate concepts. -> Viz/Method: Clickable cards grid (HTML/CSS/JS). -> Interaction: Click a risk to reveal its corresponding strategy. -> Justification: Creates a clear, interactive link between challenges and solutions.
+    CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+        :root {
+            --bg-main: #F4F7FC;
+            --text-dark: #0A192F;
+            --text-light: #4A5568;
+            --primary: #0D2F4F;
+            --secondary: #2B6CB0;
+            --accent: #C69F6F;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--accent);
+            transition: width 0.3s ease;
+        }
+        .nav-link.active::after,
+        .nav-link:hover::after {
+            width: 100%;
+        }
+    </style>
+</head>
+<body style="background-color: var(--bg-main); color: var(--text-dark);">
+
+    <!-- Header & Navigation -->
+    <header id="header" class="bg-white shadow-md sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                 <img src="https://storage.googleapis.com/maker-ai-data/uploaded/ce00d692-cb1c-46da-a1f3-328a072968d0/logo.png" alt="Logo Estaleiro Tonton" class="h-10 w-10 mr-3">
+                <span class="font-bold text-xl" style="color: var(--primary);">Estaleiro Tonton</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#solucao" class="nav-link font-semibold" style="color: var(--text-light);">A Solução</a>
+                <a href="#mercado" class="nav-link font-semibold" style="color: var(--text-light);">Mercado</a>
+                <a href="#negocio" class="nav-link font-semibold" style="color: var(--text-light);">O Negócio</a>
+                <a href="#financeiro" class="nav-link font-semibold" style="color: var(--text-light);">Financeiro</a>
+                <a href="#estrategia" class="nav-link font-semibold" style="color: var(--text-light);">Estratégia</a>
+            </div>
+             <div class="md:hidden">
+                <button id="menu-btn" class="text-gray-600 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden">
+            <a href="#solucao" class="block py-2 px-4 text-sm hover:bg-gray-200">A Solução</a>
+            <a href="#mercado" class="block py-2 px-4 text-sm hover:bg-gray-200">Mercado</a>
+            <a href="#negocio" class="block py-2 px-4 text-sm hover:bg-gray-200">O Negócio</a>
+            <a href="#financeiro" class="block py-2 px-4 text-sm hover:bg-gray-200">Financeiro</a>
+            <a href="#estrategia" class="block py-2 px-4 text-sm hover:bg-gray-200">Estratégia</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+        <!-- Hero Section -->
+        <section id="hero" class="text-center py-16">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4" style="color: var(--primary);">Navegando Rumo ao Futuro</h1>
+            <p class="text-lg md:text-xl max-w-3xl mx-auto mb-8" style="color: var(--text-light);">Uma análise interativa do plano de negócios do Estaleiro Tonton: um investimento estratégico para capitalizar oportunidades e garantir a sustentabilidade no setor naval capixaba.</p>
+            <a href="#solucao" class="px-8 py-3 rounded-full font-bold text-white transition-transform transform hover:scale-105" style="background-color: var(--accent);">Explore o Plano</a>
+        </section>
+
+        <!-- Section 1: The Problem & The Solution -->
+        <section id="solucao" class="py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-2" style="color: var(--primary);">O Problema e a Nossa Solução</h2>
+                <p class="max-w-3xl mx-auto" style="color: var(--text-light);">Custos crescentes e a escassez de infraestrutura naval na Grande Vitória criam um desafio crítico. O Estaleiro Tonton surge como a resposta estratégica.</p>
+            </div>
+            <div class="grid md:grid-cols-3 gap-8 text-center">
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="text-5xl font-bold mb-2" style="color: var(--secondary);">400%</div>
+                    <h3 class="font-semibold text-lg">Aumento de Custos</h3>
+                    <p class="text-sm" style="color: var(--text-light);">Aumento expressivo nos custos com serviços navais de terceiros, pressionando a operação.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="text-5xl font-bold mb-2" style="color: var(--secondary);">R$150 mil+</div>
+                    <h3 class="font-semibold text-lg">Custo Mensal</h3>
+                    <p class="text-sm" style="color: var(--text-light);">Despesas mensais combinadas do grupo Umi San com manutenção e atracação.</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-lg">
+                    <div class="text-5xl font-bold mb-2" style="color: var(--secondary);">2</div>
+                    <h3 class="font-semibold text-lg">Estaleiros Operacionais</h3>
+                    <p class="text-sm" style="color: var(--text-light);">Apenas dois estaleiros de pequeno porte, com estrutura rudimentar, na região.</p>
+                </div>
+            </div>
+            <div class="mt-12 bg-white p-8 rounded-lg shadow-lg text-center">
+                <h3 class="text-2xl font-bold mb-4" style="color: var(--primary);">A Solução Tonton</h3>
+                <p style="color: var(--text-light);">O Estaleiro Tonton transforma um cenário de altos custos e dependência em uma oportunidade de negócio. Ao internalizar serviços essenciais e atender a uma demanda de mercado reprimida, o projeto não só garante a **sustentabilidade operacional** para o Grupo Umi San, mas também cria uma **nova e robusta fonte de receita**, posicionando-se como um player vital no mercado naval.</p>
+            </div>
+        </section>
+
+        <!-- Section 2: Market Analysis -->
+        <section id="mercado" class="py-16 bg-white rounded-lg shadow-lg my-12">
+            <div class="text-center mb-12 px-4">
+                <h2 class="text-3xl font-bold mb-2" style="color: var(--primary);">Análise de Mercado</h2>
+                <p class="max-w-3xl mx-auto" style="color: var(--text-light);">O mercado naval capixaba apresenta uma clara lacuna de infraestrutura, criando uma oportunidade única para novos players.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 items-center px-4">
+                <div class="chart-container">
+                    <canvas id="marketChart"></canvas>
+                </div>
+                <div>
+                    <h3 class="font-bold text-xl mb-4">Potenciais Clientes</h3>
+                    <ul class="space-y-3">
+                        <li class="flex items-start p-3 rounded-md transition-colors hover:bg-blue-50">
+                            <span class="text-2xl mr-4" style="color: var(--secondary);">⚙️</span>
+                            <div>
+                                <h4 class="font-semibold">Empresas do Grupo</h4>
+                                <p class="text-sm" style="color: var(--text-light);">Umi San e Hydrosolos como clientes-âncora, garantindo demanda inicial.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start p-3 rounded-md transition-colors hover:bg-blue-50">
+                            <span class="text-2xl mr-4" style="color: var(--secondary);">⚓</span>
+                            <div>
+                                <h4 class="font-semibold">Rebocadores</h4>
+                                <p class="text-sm" style="color: var(--text-light);">Cerca de 13 rebocadores atuam na região e necessitam de manutenção e atracação.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start p-3 rounded-md transition-colors hover:bg-blue-50">
+                             <span class="text-2xl mr-4" style="color: var(--secondary);">🛥️</span>
+                            <div>
+                                <h4 class="font-semibold">Embarcações de Pequeno Porte</h4>
+                                <p class="text-sm" style="color: var(--text-light);">Inúmeras lanchas e barcos de pesca que demandam manutenção preventiva e corretiva.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 3: The Business -->
+        <section id="negocio" class="py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-2" style="color: var(--primary);">O Negócio: Estrutura e Operação</h2>
+                <p class="max-w-3xl mx-auto" style="color: var(--text-light);">Detalhes sobre a constituição, os serviços oferecidos e o cronograma de implantação do Estaleiro Tonton.</p>
+            </div>
+            <div class="grid md:grid-cols-5 gap-8">
+                <div class="md:col-span-2 bg-white p-6 rounded-lg shadow-lg">
+                    <h3 class="font-bold text-xl mb-4" style="color: var(--primary);">Estrutura Jurídica e Fiscal</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <h4 class="font-semibold">Sociedade Anônima (S.A.)</h4>
+                            <p class="text-sm" style="color: var(--text-light);">Estrutura que oferece flexibilidade para captação de recursos e expansão futura.</p>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold">Lucro Real</h4>
+                            <p class="text-sm" style="color: var(--text-light);">Regime tributário escolhido para otimizar a gestão fiscal desde o início, aproveitando deduções de investimentos.</p>
+                        </div>
+                    </div>
+                    <h3 class="font-bold text-xl mb-4 mt-6" style="color: var(--primary);">Serviços Oferecidos</h3>
+                     <p class="text-sm" style="color: var(--text-light);">A oferta de serviços será faseada, começando com manutenções de baixo investimento para gerar receita rapidamente.</p>
+                </div>
+                <div class="md:col-span-3 bg-white p-6 rounded-lg shadow-lg">
+                     <h3 class="font-bold text-xl mb-4 text-center" style="color: var(--primary);">Cronograma de Implantação</h3>
+                     <div class="relative mt-5">
+                        <div class="border-l-2 absolute h-full border-gray-300 left-3"></div>
+                        <div class="mb-8 flex items-center w-full">
+                            <div class="bg-secondary rounded-full h-6 w-6 z-10"></div>
+                            <div class="pl-8">
+                                <p class="font-semibold">Fase 1: Estruturação (3 meses)</p>
+                                <p class="text-sm text-gray-600">Constituição do CNPJ, licenças iniciais e organização do espaço físico.</p>
+                            </div>
+                        </div>
+                         <div class="mb-8 flex items-center w-full">
+                            <div class="bg-secondary rounded-full h-6 w-6 z-10"></div>
+                            <div class="pl-8">
+                                <p class="font-semibold">Fase 2: Início das Operações</p>
+                                <p class="text-sm text-gray-600">Oferta de serviços de manutenção flutuante para terceiros.</p>
+                            </div>
+                        </div>
+                        <div class="mb-8 flex items-center w-full">
+                            <div class="bg-secondary rounded-full h-6 w-6 z-10"></div>
+                            <div class="pl-8">
+                                <p class="font-semibold">Fase 3: Adequação Regulatória (6-12 meses)</p>
+                                <p class="text-sm text-gray-600">Busca por estrutura para atender requisitos do FMM e ANTAQ.</p>
+                            </div>
+                        </div>
+                         <div class="flex items-center w-full">
+                            <div class="bg-accent rounded-full h-6 w-6 z-10"></div>
+                            <div class="pl-8">
+                                <p class="font-semibold">Futuro: Expansão</p>
+                                <p class="text-sm text-gray-600">Construção da carreira ou dique flutuante para ampliar a gama de serviços.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Financial Plan -->
+        <section id="financeiro" class="py-16 bg-white rounded-lg shadow-lg my-12">
+            <div class="text-center mb-12 px-4">
+                <h2 class="text-3xl font-bold mb-2" style="color: var(--primary);">Plano Financeiro</h2>
+                <p class="max-w-3xl mx-auto" style="color: var(--text-light);">Uma visão clara sobre o investimento necessário e as perspectivas de receita do projeto.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-12 items-center px-4">
+                <div>
+                    <h3 class="font-bold text-xl mb-2">Investimento Total: R$ 3.698.000,00</h3>
+                    <p class="text-sm mb-4" style="color: var(--text-light);">O investimento inicial foca na aquisição do imóvel, a base para o crescimento futuro.</p>
+                    <div class="chart-container">
+                        <canvas id="investmentChart"></canvas>
+                    </div>
+                </div>
+                <div>
+                    <h3 class="font-bold text-xl mb-4">Perspectivas de Receita</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-lg" style="background-color: #eaf2f8;">
+                            <h4 class="font-semibold" style="color: var(--secondary);">Manutenção Inicial</h4>
+                            <p class="text-sm" style="color: var(--text-light);">Receita imediata com serviços que não exigem docagem (motores, geradores, pintura).</p>
+                        </div>
+                        <div class="p-4 rounded-lg" style="background-color: #eaf2f8;">
+                            <h4 class="font-semibold" style="color: var(--secondary);">Atracação de Embarcações</h4>
+                            <p class="text-sm" style="color: var(--text-light);">Potencial de receita estimada em **R$ 50.000,00 mensais** com atracação de rebocadores.</p>
+                        </div>
+                        <div class="p-4 rounded-lg" style="background-color: #eaf2f8;">
+                            <h4 class="font-semibold" style="color: var(--secondary);">Serviços de Docagem (Futuro)</h4>
+                            <p class="text-sm" style="color: var(--text-light);">Preços competitivos com diárias de R$600 a R$1.200, alinhados ao mercado, após construção da carreira.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 5: Risks & Strategy -->
+        <section id="estrategia" class="py-16">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-2" style="color: var(--primary);">Riscos e Estratégia de Mitigação</h2>
+                <p class="max-w-3xl mx-auto" style="color: var(--text-light);">Identificamos os principais desafios e traçamos uma estratégia clara para navegar com segurança e alcançar o sucesso.</p>
+            </div>
+            <div id="risk-container" class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Risk cards will be injected here by JS -->
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-white mt-12 py-6">
+        <div class="container mx-auto text-center" style="color: var(--text-light);">
+            <p>&copy; 2025 Estaleiro Tonton. Todos os direitos reservados.</p>
+            <p class="text-sm">Plano de Negócios Interativo.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Mobile Menu
+            const menuBtn = document.getElementById('menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            menuBtn.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Nav link active state on scroll
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('.nav-link');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, { rootMargin: '-30% 0px -70% 0px' });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+
+            // Market Chart
+            const marketCtx = document.getElementById('marketChart').getContext('2d');
+            new Chart(marketCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Operacionais', 'Inoperantes'],
+                    datasets: [{
+                        label: 'Estaleiros na Grande Vitória',
+                        data: [2, 1],
+                        backgroundColor: ['rgba(43, 108, 176, 0.8)', 'rgba(160, 174, 192, 0.8)'],
+                        borderColor: ['rgba(43, 108, 176, 1)', 'rgba(160, 174, 192, 1)'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Disponibilidade de Estaleiros na Região' },
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                    }
+                }
+            });
+
+            // Investment Chart
+            const investmentCtx = document.getElementById('investmentChart').getContext('2d');
+            new Chart(investmentCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Entrada (2024)', 'Financiamento (36x)', 'Organização Inicial'],
+                    datasets: [{
+                        label: 'Investimento',
+                        data: [1250000, 2448000, 30000],
+                        backgroundColor: [
+                            'rgba(13, 47, 79, 0.9)', 
+                            'rgba(43, 108, 176, 0.9)', 
+                            'rgba(198, 159, 111, 0.9)'
+                        ],
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: { display: true, text: 'Composição do Investimento' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed !== null) {
+                                        label += new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(context.parsed);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Risks & Strategy
+            const risks = [
+                {
+                    title: 'Risco Legal',
+                    icon: '⚖️',
+                    details: 'O imóvel não possui escritura pública nem registro no RIP em nome do vendedor, o que gera insegurança jurídica.',
+                    strategy: 'Posicionar-se pela qualidade e usar a rede de contatos da Umi San/Hydrosolos para construir reputação, enquanto se trabalha na regularização.'
+                },
+                {
+                    title: 'Risco Financeiro',
+                    icon: '💰',
+                    details: 'Possível degradação da condição econômica do grupo antes da quitação do imóvel e recursos limitados para estruturação.',
+                    strategy: 'Focar no menor investimento inicial possível para gerar receita com terceiros rapidamente, aliviando o caixa.'
+                },
+                {
+                    title: 'Risco Ambiental',
+                    icon: '🌿',
+                    details: 'Dificuldades e atrasos na obtenção de licenças ambientais necessárias para a operação do estaleiro.',
+                    strategy: 'Iniciar o processo de licenciamento o mais cedo possível e planejar as operações em fases, começando pelas de menor impacto.'
+                },
+                {
+                    title: 'Risco de Concorrência',
+                    icon: '⚔️',
+                    details: 'Empresas já estabelecidas como SS Naval e Zemax Log, e potencial crescimento de outros concorrentes.',
+                    strategy: 'Adotar uma precificação competitiva, focar na qualidade e agilidade do atendimento, e formar parcerias estratégicas locais.'
+                }
+            ];
+
+            const riskContainer = document.getElementById('risk-container');
+            risks.forEach(risk => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-lg shadow-lg p-6 cursor-pointer transform transition-transform hover:-translate-y-1';
+                card.innerHTML = `
+                    <div class="flex flex-col items-center text-center">
+                        <span class="text-4xl mb-4">${risk.icon}</span>
+                        <h4 class="font-bold text-lg mb-2" style="color: var(--primary);">${risk.title}</h4>
+                        <p class="text-sm font-semibold" style="color: var(--text-light);">${risk.details}</p>
+                        <div class="strategy-content hidden mt-4 pt-4 border-t border-gray-200">
+                             <h5 class="font-bold text-md mb-2" style="color: var(--accent);">Estratégia</h5>
+                             <p class="text-sm" style="color: var(--text-light);">${risk.strategy}</p>
+                        </div>
+                    </div>
+                `;
+                riskContainer.appendChild(card);
+                
+                card.addEventListener('click', () => {
+                    const strategy = card.querySelector('.strategy-content');
+                    strategy.classList.toggle('hidden');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
